@@ -23,7 +23,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="027_Longest_palindromic_substring.cpp">
+    <ClCompile Include="027_Splitting_a_string_into_tokens.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
