@@ -1,5 +1,4 @@
 ﻿// 044_Monthly_calendar.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
-// Todo: Like Range
 // Note
 // - boost::date_time library 이용
 // - Haskell 스럽게 구현
@@ -129,6 +128,12 @@ std::deque<std::deque<T>> operator+(std::deque<T> l1, std::deque<std::deque<T>> 
 	return std::move(l2);
 }
 
+template <typename F, typename U>
+decltype(auto) operator|(F&& f, U&& u)
+{
+	return std::invoke(std::forward<U>(u), std::forward<F>(f));
+}
+
 int main()
 {
 	int year;
@@ -139,37 +144,55 @@ int main()
 
 	date const d(year, month, 1);
 
-	auto const month_length = d.end_of_month().day();
-	auto const week = d.day_of_week();
+	// date -> [int]
+	auto Generate = [](auto const& d) {
+		std::deque<int> days(d.end_of_month().day());
 
-	std::deque<int> days(month_length);
+		std::iota(std::begin(days), std::end(days), 1);
 
-	std::iota(std::begin(days), std::end(days), 1);
+		return days;
+	};
 
-	std::deque<std::string> days_1d(week - 1, "    ");
+	// [int] -> [string]
+	auto Map = [week = d.day_of_week()](auto const& days) {
+		std::deque<std::string> days_1d(week - 1, "    ");
 
-	std::transform(std::cbegin(days), std::cend(days), std::back_inserter(days_1d), [](auto const d) {
-		std::stringstream ss;
+		std::transform(std::cbegin(days), std::cend(days), std::back_inserter(days_1d), [](auto const d) {
+			std::stringstream ss;
 
-		ss.fill(' ');
-		ss << std::setw(3) << d << ' ';
+			ss.fill(' ');
+			ss << std::setw(3) << d << ' ';
 
-		return ss.str();
-	});
+			return ss.str();
+		});
 
-	constexpr std::size_t week_count = 7;
-	auto days_2d = ChunksOf(week_count, days_1d);
-	auto result = std::accumulate(std::cbegin(days_2d), std::cend(days_2d), std::vector<std::string>{}, [](auto acc, auto const& e) {
-		std::stringstream ss;
+		return days_1d;
+	};
 
-		std::copy(std::cbegin(e), std::cend(e), std::ostream_iterator<std::string>(ss));
-		acc.push_back(ss.str());
+	// [string] -> [[string]]
+	auto Chunks = [](auto const& days_1d) {
+		return ChunksOf(7, days_1d);
+	};
 
-		return std::move(acc);
-	});
+	// [[string]] -> [string]
+	auto Reduce = [](auto const& days_2d) {
+		return std::accumulate(std::cbegin(days_2d), std::cend(days_2d), std::vector<std::string>{}, [](auto acc, auto const& e) {
+			std::stringstream ss;
 
-	std::cout << "\nMon Tue Wed Thu Fri Sat Sun\n";
-	std::copy(std::cbegin(result), std::cend(result), std::ostream_iterator<std::string>(std::cout, "\n"));
+			std::copy(std::cbegin(e), std::cend(e), std::ostream_iterator<std::string>(ss));
+			acc.push_back(ss.str());
+
+			return std::move(acc);
+		});
+	};
+
+	// [string] -> IO ()
+	auto PrintCalendar = [](auto const& result) {
+		std::cout << "\nMon Tue Wed Thu Fri Sat Sun\n";
+		std::copy(std::cbegin(result), std::cend(result), std::ostream_iterator<std::string>(std::cout, "\n"));
+	};
+
+	Generate(d) | Map | Chunks | Reduce | PrintCalendar;	// Like Range
 
 	return 0;
 }
