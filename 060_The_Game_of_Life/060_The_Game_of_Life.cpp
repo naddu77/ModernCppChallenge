@@ -150,8 +150,7 @@ int main()
 {
 	using namespace std::chrono_literals;
 
-	Universe u(50, 20);
-	u.Run(Universe::Seed::RANDOM, 100, 100ms);
+	Universe(50, 20).Run(Universe::Seed::RANDOM, 100, 100ms);
 
 	return 0;
 }

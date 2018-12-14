@@ -17,12 +17,12 @@ int main()
 		 "7555 123456"
 	};
 
-	auto contry_code_by = [] {
+	auto country_code_by = [] {
 		return ranges::view::filter([](auto const& e) { return e.find("44") == 0 || e.find("+44") == 0; });
 	};
 
 	auto result = numbers
-		| contry_code_by()
+		| country_code_by()
 		;
 
 	std::cout << result << std::endl;

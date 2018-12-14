@@ -23,7 +23,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="50_Filtering_a_list_of_phone_numbers.cpp">
+    <ClCompile Include="065_Thread-safe_logging_to_the_console.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

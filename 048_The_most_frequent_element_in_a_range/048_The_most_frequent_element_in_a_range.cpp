@@ -1,6 +1,6 @@
 ﻿// 048_The_most_frequent_element_in_a_range.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
 // Note
-// - Range-v3 이용(너무 어렵다)
+// - Range-v3 이용
 
 #include "pch.h"
 #include <range/v3/all.hpp>
@@ -51,7 +51,7 @@ int main()
 		| Sorted()
 		;
 
-	auto result = sorted 
+	auto result = sorted
 		| ValueBy()
 		| ToPair()
 		| FilterMostFrequentNumber()

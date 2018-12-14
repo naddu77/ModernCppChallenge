@@ -50,7 +50,7 @@ int main()
 		});
 	};
 
-	auto to_print = [] {
+	auto to_string = [] {
 		return ranges::view::transform([](auto e) {
 			std::stringstream ss;
 
@@ -66,7 +66,7 @@ int main()
 		| sort_ratings()
 		| filter_highest_and_lowest_ratings(5)
 		| to_histogram()
-		| to_print(),
+		| to_string(),
 		ranges::ostream_iterator<std::string>(std::cout, "\n"));
 
 	return 0;

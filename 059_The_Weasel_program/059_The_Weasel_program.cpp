@@ -43,7 +43,7 @@ void Run(std::string const& target, int const children_count, double const mutat
 
 		parent = *ranges::max_element(children, [target](auto const& a, auto const& b) {
 			auto GetScore = ranges::make_pipeable([](auto&& pairs) {
-				return ranges::accumulate(std::forward<decltype(pairs)>(pairs), 0, [](auto const acc, auto const& p) { return acc + (p.first == p.second ? 1 : 0); });
+				return ranges::count_if(std::forward<decltype(pairs)>(pairs), [](auto const& p) { return p.first == p.second; });
 			});
 
 			return (ranges::view::zip(a, target) | GetScore) < (ranges::view::zip(b, target) | GetScore);
